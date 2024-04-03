@@ -7,7 +7,7 @@ const list = ref([]);
 const getlist = async () => {
   //接口调用
   const res = await axios.get('/list')
-  //交给List
+  //交给List->
   list.value = res.data
 }
 onMounted(() => getlist());
