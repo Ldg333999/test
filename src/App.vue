@@ -5,6 +5,7 @@ import axios from 'axios'
 // TODO: 列表渲染
 const list = ref([]);
 const getlist = async () => {
+  console.log("更新")
   //接口调用
   const res = await axios.get('/list')
   //交给List->
@@ -12,9 +13,18 @@ const getlist = async () => {
 }
 onMounted(() => getlist());
 // TODO: 删除功能
-
+const onDelete = async (id) => {
+  console.log(id)
+  await axios.delete(`/del/${id}`);
+  getlist()
+}
 // TODO: 编辑功能
+//打开一个弹框--->回填数据--->更新数据
+const editRef = ref(null)
+const onEdit = (row) => {
+  editRef.value.open(row);
 
+}
 </script>
 
 <template>
@@ -24,14 +34,14 @@ onMounted(() => getlist());
       <el-table-column label="姓名" prop="name" width="150"></el-table-column>
       <el-table-column label="籍贯" prop="place"></el-table-column>
       <el-table-column label="操作" width="150">
-        <template #default>
-          <el-button type="primary" link>编辑</el-button>
-          <el-button type="danger" link>删除</el-button>
+        <template #default="{ row }">
+          <el-button type="primary" @click="onEdit(row)" link>编辑</el-button>
+          <el-button type="danger" @click="onDelete(row.id)" link>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <Edit />
+  <Edit ref="editRef" @on-update="getlist" />
 </template>
 
 <style scoped>
